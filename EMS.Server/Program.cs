@@ -1,4 +1,7 @@
 using EMS.ServerLibrary.Data;
+using EMS.ServerLibrary.Helpers;
+using EMS.ServerLibrary.Repositories.Contracts;
+using EMS.ServerLibrary.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("EmployeeManagementSystem") ?? 
         throw new InvalidOperationException("Sorry, your connection is not found"));
 });
+
+builder.Services.Configure<JwtSection>(builder.Configuration.GetSection("JwtSection"));
+builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 
 var app = builder.Build();
 
